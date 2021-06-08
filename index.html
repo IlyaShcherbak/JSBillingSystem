@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Billing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="sidebar">
+      <h1 class="title">Доступные платежи</h1>
+
+      <div class="sidebar-item">
+        <img class="icon" src="assets/taxes.svg" alt="Налоги">
+        <p>Налоги</p>
+      </div>
+
+      <div class="sidebar-item">
+        <img class="icon" src="assets/drop.svg" alt="Холодная вода">
+        <p>Холодная вода</p>
+      </div>
+
+      <div class="sidebar-item">
+        <img class="icon" src="assets/internet.svg" alt="Интернет">
+        <p>Интернет</p>
+      </div>
+
+      <div class="sidebar-item">
+        <img class="icon" src="assets/security.svg" alt="Охрана">
+        <p>Охрана</p>
+      </div>
+
+      <div class="sidebar-item">
+        <img class="icon" src="assets/exchange.svg" alt="Обмен валют">
+        <p>Обмен валют</p>
+      </div>
+
+    </div>
+
+    <div class="content">
+      <h2 class="title">Холодная вода</h2>
+      <p>Оплата холодного водоснабжения</p>
+
+      <div class="meters">
+        <label class="description" for="utility-meter">Выберите счётчик</label>
+        <select class="labeled-input" name="utility-meter" id="utility-meter">
+          <option value="utility-meter-value1">ДС 949321</option>
+          <option value="utility-meter-value2">КА 522010</option>
+          <option value="utility-meter-value3">ЛК 309123</option>
+        </select>
+      </div>
+
+      <div class="meter-value">
+        <div class="meters">
+          <label class="description" for="previous-meter-value">Предыдущие показания</label>
+          <input class="labeled-input" type="text" name="previous-meter-value" id="previous-meter-value">
+        </div>
+
+        <div class="meters">
+          <label class="description" for="current-meter-value">Текущие показания</label>
+          <input class="labeled-input" type="text" name="current-meter-value" id="current-meter-value">
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="payment">
+        <h3>К оплате</h3>
+        <p>ДС 949321 $ <span id="meter-payment1">123</span></p>
+        <p>КА 522010 $ <span id="meter-payment2">123</span></p>
+        <p>ЛК 309123 $ <span id="meter-payment3">123</span></p>
+        <hr>
+        <p>Всего $<span id="meter-payment-total">123</span></p>
+      </div>
+
+      <hr>
+
+      <div class="clear-wrapper">
+        <button class="clear">Очистить</button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

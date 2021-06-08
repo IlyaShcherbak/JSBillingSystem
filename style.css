@@ -1,0 +1,97 @@
+body {
+  background-color : #efefef;
+  font-family      : sans-serif;
+}
+
+hr {
+  display    : block;
+  height     : 1px;
+  border     : 0;
+  border-top : 1px solid #ccc;
+  margin     : 1em 0;
+  padding    : 0;
+}
+
+.wrapper {
+  display               : grid;
+  grid-template-columns : 300px auto;
+  margin: 20px 160px;
+}
+
+.title{
+  font-size: 25px;
+  margin-top : 0;
+  margin-bottom : 30px;
+}
+
+.sidebar {
+  margin-top: 30px;
+}
+
+.sidebar-item{
+  height           : 80px;
+  background-color : white;
+  margin-bottom    : 20px;
+  border-radius    : 10px;
+  display          : flex;
+  align-items      : center;
+  cursor           : pointer;
+  box-shadow       : 5px 4px 6px lightgrey;
+}
+
+.icon {
+  width  : 40px;
+  margin : 20px 30px;
+}
+
+.content {
+  background-color : white;
+  margin-left : 80px;
+  padding: 30px;
+  border-radius : 10px;
+}
+
+.description{
+  display: block;
+  font-size   : 12px;
+  font-weight : 600;
+  color       : grey;
+}
+
+.meter-value {
+  display : flex;
+}
+
+.meters{
+  margin-right  : 20px;
+  margin-bottom : 20px;
+}
+
+.labeled-input{
+  height     : 40px;
+  width      : 180px;
+  box-sizing : border-box;
+  margin-top: 5px;
+  border : 1px solid gray;
+  border-radius : 5px;
+}
+
+.payment{
+  width: 180px;
+}
+
+.clear-wrapper{
+  display: flex;
+  justify-content : flex-end;
+  margin: 20px 0;
+}
+
+.clear{
+  width  : 100px;
+  height : 35px;
+  border-radius    : 5px;
+  border           : 2px solid #28eefb;
+  background-color : white;
+  color: #26d1dc;
+  cursor: pointer;
+}
