@@ -7,37 +7,37 @@
 </head>
 <body>
   <div class="wrapper">
-    <div class="sidebar">
+    <div id="sidebar">
       <h1 class="title">Доступные платежи</h1>
 
-      <div class="sidebar-item">
+      <button id="taxes" class="sidebar-item">
         <img class="icon" src="assets/taxes.svg" alt="Налоги">
         <p>Налоги</p>
-      </div>
+      </button>
 
-      <div class="sidebar-item">
+      <button id="cold-water" class="sidebar-item selected">
         <img class="icon" src="assets/drop.svg" alt="Холодная вода">
-        <p>Холодная вода</p>
-      </div>
+        Холодная вода
+      </button>
 
-      <div class="sidebar-item">
+      <button id="internet" class="sidebar-item">
         <img class="icon" src="assets/internet.svg" alt="Интернет">
         <p>Интернет</p>
-      </div>
+      </button>
 
-      <div class="sidebar-item">
+      <button id="security" class="sidebar-item">
         <img class="icon" src="assets/security.svg" alt="Охрана">
         <p>Охрана</p>
-      </div>
+      </button>
 
-      <div class="sidebar-item">
+      <button id="exchange" class="sidebar-item">
         <img class="icon" src="assets/exchange.svg" alt="Обмен валют">
         <p>Обмен валют</p>
-      </div>
+      </button>
 
     </div>
 
-    <div class="content">
+    <div id="cold-water-content" class="content">
       <h2 class="title">Холодная вода</h2>
       <p>Оплата холодного водоснабжения</p>
 
@@ -80,6 +80,28 @@
       </div>
 
     </div>
+
+    <div id="taxes-content" class="content d-none" >
+      <h2 class="title">Налоги</h2>
+      <p>Оплата налогов</p>
+    </div>
+
+    <div id="internet-content" class="content d-none" >
+      <h2 class="title">Интернет</h2>
+      <p>Оплата интернет услуг</p>
+    </div>
+
+    <div id="security-content" class="content d-none" >
+      <h2 class="title">Охрана</h2>
+      <p>Оплата услуг охраны</p>
+    </div>
+
+    <div id="exchange-content" class="content d-none" >
+      <h2 class="title">Обмен валют</h2>
+      <p>Обмен валюты на нужную вам</p>
+    </div>
+
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
