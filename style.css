@@ -16,6 +16,14 @@ hr {
   display : none;
 }
 
+
+
+#error-message {
+  font-size: 15px;
+  font-weight: 600;
+  color: red;
+}
+
 .wrapper {
   display               : grid;
   grid-template-columns : 300px auto;
@@ -85,6 +93,12 @@ hr {
   margin-bottom : 20px;
 }
 
+.labeled-input::-webkit-outer-spin-button,
+.labeled-input::-webkit-inner-spin-button {
+  -webkit-appearance : none;
+  margin             : 0;
+}
+
 .labeled-input {
   height        : 40px;
   width         : 180px;
@@ -92,6 +106,10 @@ hr {
   margin-top    : 5px;
   border        : 1px solid gray;
   border-radius : 5px;
+}
+
+.invalid {
+  border : 2px solid red;
 }
 
 .payment {

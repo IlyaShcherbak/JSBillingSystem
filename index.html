@@ -12,7 +12,7 @@
 
       <button id="taxes" class="sidebar-item">
         <img class="icon" src="assets/taxes.svg" alt="Налоги">
-        <p>Налоги</p>
+        Налоги
       </button>
 
       <button id="cold-water" class="sidebar-item selected">
@@ -22,17 +22,17 @@
 
       <button id="internet" class="sidebar-item">
         <img class="icon" src="assets/internet.svg" alt="Интернет">
-        <p>Интернет</p>
+        Интернет
       </button>
 
       <button id="security" class="sidebar-item">
         <img class="icon" src="assets/security.svg" alt="Охрана">
-        <p>Охрана</p>
+        Охрана
       </button>
 
       <button id="exchange" class="sidebar-item">
         <img class="icon" src="assets/exchange.svg" alt="Обмен валют">
-        <p>Обмен валют</p>
+        Обмен валют
       </button>
 
     </div>
@@ -44,6 +44,7 @@
       <div class="meters">
         <label class="description" for="utility-meter">Выберите счётчик</label>
         <select class="labeled-input" name="utility-meter" id="utility-meter">
+          <option value="utility-meter-empty" selected></option>
           <option value="utility-meter-value1">ДС 949321</option>
           <option value="utility-meter-value2">КА 522010</option>
           <option value="utility-meter-value3">ЛК 309123</option>
@@ -53,15 +54,17 @@
       <div class="meter-value">
         <div class="meters">
           <label class="description" for="previous-meter-value">Предыдущие показания</label>
-          <input class="labeled-input" type="text" name="previous-meter-value" id="previous-meter-value">
+          <input class="labeled-input" type="number" name="previous-meter-value" id="previous-meter-value" min="1">
         </div>
 
         <div class="meters">
           <label class="description" for="current-meter-value">Текущие показания</label>
-          <input class="labeled-input" type="text" name="current-meter-value" id="current-meter-value">
+          <input class="labeled-input" type="number" name="current-meter-value" id="current-meter-value" min="1">
         </div>
       </div>
-
+      <p id="error-message"></p>
+      <p class="d-none errors" id="error1">Вводимые значения должны быть больше 0</p>
+      <p class="d-none errors" id="error2">Текущие показания должны быть больше предыдущих</p>
       <hr>
 
       <div class="payment">
