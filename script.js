@@ -1,19 +1,21 @@
 let currentPayment = {
   id: "cold-water",
-  meterId: "",
+  meterId: null,
   previous: null,
   current: null,
+  amount: null,
 };
 
-const payments = [
-  {
-    id: "cold-water",
-    meterId: "ДС 949321",
-    current: 246.791,
-    previous: 231.408,
-    amount: 20,
-  }
-];
+const payments = [];
+// let totalPayment = 0;
+
+const tariffs = {
+  taxes: 0.9,
+  coldWater: 1.5,
+  internet: 3.7,
+  security: 5,
+  exchange: 0.2,
+}
 
 const errorMessages = {
   invalidZero: "Вводимые значения должны быть больше 0",
@@ -67,8 +69,9 @@ meter.onclick = function () {
   
   if(currentPayment.meterId !== selectedOptionText) {
     currentPayment.meterId = selectedOptionText;
-    console.log(currentPayment);
+    checkButtonState();
   }
+  
 }
 
 
@@ -91,7 +94,7 @@ currentMeterValue.onchange = function (event) {
 function validate() {
   errorMessage = "";
   
-  if (currentPayment.previous !== null &&currentPayment.previous < 1) {
+  if (currentPayment.previous !== null && currentPayment.previous < 1) {
     previousMeterValue.classList.add("invalid");
     errorMessage = errorMessages.invalidZero;
   }
@@ -109,4 +112,57 @@ function validate() {
   }
   
   document.getElementById("error-message").innerText = errorMessage;
+  checkButtonState();
 }
+
+
+function checkButtonState() {
+  const button = document.getElementById("save-button");
+  const isValid = !errorMessage && currentPayment.meterId && currentPayment.previous && currentPayment.current;
+  button.disabled = !isValid;
+  // button.disabled = !(!errorMessage && currentPayment.meterId && currentPayment.previous && currentPayment.current);
+}
+
+const saveButton = document.getElementById("save-button");
+saveButton.onclick = function () {
+  payments.push(currentPayment);
+  countCosts();
+  
+  console.log(payments);
+  
+  showPayment();
+  currentPayment = {
+    id: "cold-water",
+    meterId: null,
+    previous: null,
+    current: null,
+  };
+  
+  previousMeterValue.value ="";
+  currentMeterValue.value ="";
+  meter.selectedIndex = 0;
+};
+
+function countCosts() {
+  currentPayment.amount = (currentPayment.current - currentPayment.previous) * tariffs.coldWater;
+}
+
+function showPayment() {
+  const text = document.createElement("p");
+  text.innerText = `${currentPayment.meterId} $ ${currentPayment.amount}`;
+  
+  const paymentFields = document.getElementById("payment-fields");
+  paymentFields.appendChild(text);
+  
+  const initialValue = 0;
+  const totalPayment = payments.reduce(function(accumulator, currentValue){
+    console.log(accumulator, currentValue.amount);
+    return accumulator + currentValue.amount;
+  }, initialValue);
+  const totalField = document.getElementById("meter-payment-total");
+  totalField.innerText = totalPayment;
+  
+}
+
+
+const clearButton =document.getElementById("clear-button");
