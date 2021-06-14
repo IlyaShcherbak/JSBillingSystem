@@ -6,7 +6,7 @@ let currentPayment = {
   amount: null,
 };
 
-const payments = [];
+let payments = [];
 // let totalPayment = 0;
 
 const tariffs = {
@@ -141,6 +141,7 @@ saveButton.onclick = function () {
   previousMeterValue.value ="";
   currentMeterValue.value ="";
   meter.selectedIndex = 0;
+  document.getElementById("save-button").disabled = true;
 };
 
 function countCosts() {
@@ -155,14 +156,21 @@ function showPayment() {
   paymentFields.appendChild(text);
   
   const initialValue = 0;
-  const totalPayment = payments.reduce(function(accumulator, currentValue){
-    console.log(accumulator, currentValue.amount);
+  const totalPayment = payments.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.amount;
   }, initialValue);
+  
   const totalField = document.getElementById("meter-payment-total");
   totalField.innerText = totalPayment;
-  
 }
 
 
-const clearButton =document.getElementById("clear-button");
+const clearButton = document.getElementById("clear-button");
+clearButton.onclick = function() {
+  payments = [];
+  
+  const paymentFields = document.getElementById("payment-fields");
+  paymentFields.innerText = "";
+  
+  document.getElementById("meter-payment-total").innerText = "0";
+};
