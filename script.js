@@ -6,16 +6,93 @@ let currentPayment = {
   amount: null,
 };
 
-let payments = [];
-// let totalPayment = 0;
-
 const tariffs = {
-  taxes: 0.9,
+  taxes    : 0.9,
   coldWater: 1.5,
-  internet: 3.7,
-  security: 5,
-  exchange: 0.2,
+  internet : 3.7,
+  security : 5,
+  exchange : 0.2,
 }
+
+let categories = [
+  {
+    id   : "taxes",
+    label: "Налоги",
+    total: 0,
+  },
+  {
+    id   : "cold-water",
+    label: "Холодная вода",
+    total: 0,
+  },
+  {
+    id   : "internet",
+    label: "Интернет",
+    total: 0,
+  },
+  {
+    id   : "security",
+    label: "Охрана",
+    total: 0,
+  },
+  {
+    id   : "exchange",
+    label: "Обмен валют",
+    total: 0,
+  },
+];
+
+let payments = [];
+let balance = 300;
+let savedTotal = 0;
+
+reloadUpdate();
+
+console.log(localStorage);
+
+
+function reloadUpdate() {
+  if (localStorage.getItem("payments")) {
+    payments = JSON.parse(localStorage.getItem("payments"));
+    console.log("payments " + localStorage.getItem("payments"));
+    document.getElementById("cold-water-checkbox").disabled = false;
+  }
+  
+  if (!document.getElementById("payment-fields").innerText && localStorage.getItem("paymentFields")) {
+    document.getElementById("payment-fields").innerText = JSON.parse(localStorage.getItem("paymentFields"));
+  }
+  
+  if (document.getElementById("meter-payment-total").innerText === "0" && localStorage.getItem("paymentTotal")) {
+    document.getElementById("meter-payment-total").innerText = JSON.parse(localStorage.getItem("paymentTotal"));
+  }
+  
+  if (localStorage.getItem("categories")) {
+    categories = JSON.parse(localStorage.getItem("categories"));
+    console.log("categories " + categories);
+  }
+  
+  if (localStorage.getItem("balance")) {
+    balance = +localStorage.getItem("balance");
+    console.log("balance " + balance);
+  }
+  
+  if (localStorage.getItem("statusMessages") && localStorage.hasOwnProperty("isError")) {
+    document.getElementById("payment-state").innerText = localStorage.getItem("statusMessages");
+    document.getElementById("payment-state").classList.add("green-text");
+    
+    if (localStorage.getItem("isError") === "true"){
+      document.getElementById("payment-state").classList.add("red-text"); //?
+    }
+  }
+  
+  savedTotal = +localStorage.getItem("paymentTotal");
+  document.getElementById("meter-payment-total").innerText = savedTotal;
+  console.log(`saved total `+ savedTotal);
+  console.log("is error " + localStorage.getItem("isError"), typeof(localStorage.getItem("isError")));
+
+}
+
+
 
 const errorMessages = {
   invalidZero: "Вводимые значения должны быть больше 0",
@@ -24,7 +101,6 @@ const errorMessages = {
 let errorMessage = "";
 
 const sidebar = document.getElementById("sidebar");
-
 sidebar.onclick = function (event) {
   if (event.target.tagName === "BUTTON") {
     const clickedElementID = event.target.id;
@@ -63,7 +139,6 @@ function showContentById(id) {
 }
 
 const meter = document.getElementById("utility-meter");
-
 meter.onclick = function () {
   const selectedOptionText = meter.options[meter.selectedIndex].text;
   
@@ -71,7 +146,6 @@ meter.onclick = function () {
     currentPayment.meterId = selectedOptionText;
     checkButtonState();
   }
-  
 }
 
 
@@ -83,6 +157,7 @@ previousMeterValue.onchange = function (event) {
   validate();
 };
 
+
 const currentMeterValue = document.getElementById("current-meter-value");
 currentMeterValue.onchange = function (event) {
   const value = event.target.value;
@@ -90,6 +165,7 @@ currentMeterValue.onchange = function (event) {
   currentPayment.current = +value;
   validate();
 };
+
 
 function validate() {
   errorMessage = "";
@@ -115,7 +191,6 @@ function validate() {
   checkButtonState();
 }
 
-
 function checkButtonState() {
   const button = document.getElementById("save-button");
   const isValid = !errorMessage && currentPayment.meterId && currentPayment.previous && currentPayment.current;
@@ -123,12 +198,12 @@ function checkButtonState() {
   // button.disabled = !(!errorMessage && currentPayment.meterId && currentPayment.previous && currentPayment.current);
 }
 
+
 const saveButton = document.getElementById("save-button");
 saveButton.onclick = function () {
+  localStorage.removeItem("payments");
   payments.push(currentPayment);
   countCosts();
-  
-  console.log(payments);
   
   showPayment();
   currentPayment = {
@@ -138,11 +213,19 @@ saveButton.onclick = function () {
     current: null,
   };
   
+  localStorage.setItem("payments", JSON.stringify(payments));
+  
+  const paymentFields = document.getElementById("payment-fields").innerText;
+  localStorage.setItem("paymentFields", JSON.stringify(paymentFields))
+  
   previousMeterValue.value ="";
   currentMeterValue.value ="";
   meter.selectedIndex = 0;
   document.getElementById("save-button").disabled = true;
+  
+  document.getElementById("cold-water-checkbox").disabled = false;
 };
+
 
 function countCosts() {
   currentPayment.amount = (currentPayment.current - currentPayment.previous) * tariffs.coldWater;
@@ -160,8 +243,16 @@ function showPayment() {
     return accumulator + currentValue.amount;
   }, initialValue);
   
+  categories.find(category => category.id === currentPayment.id).total = totalPayment + savedTotal;//!!!!!!!!!!!!!!!!!!
+  console.log("categories after save btn"+ categories);
+  localStorage.setItem("categories", JSON.stringify(categories));
+  
+  localStorage.setItem("paymentTotal", JSON.stringify(totalPayment));
+  
+  
   const totalField = document.getElementById("meter-payment-total");
-  totalField.innerText = totalPayment;
+  console.log(totalPayment, savedTotal);
+  totalField.innerText = totalPayment ;
 }
 
 
@@ -173,4 +264,76 @@ clearButton.onclick = function() {
   paymentFields.innerText = "";
   
   document.getElementById("meter-payment-total").innerText = "0";
+  localStorage.clear();
+  console.log(localStorage);
+};
+
+
+function payCategory(category) {
+  const isCategorySelected = document.getElementById(`${category.id}-checkbox`).checked;
+  const messages = {
+    paymentMessage: "",
+    statusMessage : "",
+    isError: false,
+  }
+  
+  if (isCategorySelected && balance>= category.total) {
+    balance = balance - category.total;
+    console.log(balance, category.total);
+    localStorage.setItem("balance", JSON.stringify(balance));
+  
+    messages.paymentMessage = `${category.id}: оплачено`;
+    messages.statusMessage = `${category.label}: успешно оплачено`;
+    messages.isError = false;
+    
+    category.total = 0;
+    
+    localStorage.setItem("isError", JSON.stringify(messages.isError));
+    return messages;
+  }
+  if (isCategorySelected && balance < category.total) {
+    messages.paymentMessage = `${category.id}: не оплачено`;
+    messages.statusMessage  = `${category.label}: ошибка транзакции`;
+    
+    messages.isError = true;
+    
+    localStorage.setItem("isError", JSON.stringify(messages.isError));
+    return messages;
+  }
+}
+
+const payButton = document.getElementById("pay-button");
+payButton.onclick = function() {
+  let payMessage = "";
+  let paymentStatesMessage = "";
+  
+  const paymentStates = document.getElementById("payment-state");
+  const paymentStatesContent = document.createElement("p");
+  paymentStatesContent.classList.add("green-text");
+  
+  categories.forEach(category => {
+    const selectedCategory = payCategory(category);
+    if (selectedCategory) {
+      payMessage = payMessage + selectedCategory.paymentMessage + "\n";
+      paymentStatesMessage = paymentStatesMessage + selectedCategory.statusMessage + "\n"
+      
+      if (selectedCategory.isError) {
+        paymentStatesContent.classList.add("red-text");
+      }
+    }
+  });
+  console.log(payMessage);
+  
+  localStorage.setItem("statusMessages", paymentStatesMessage);
+  
+  paymentStatesContent.innerText = paymentStatesMessage;
+  paymentStates.appendChild(paymentStatesContent);
+  
+  
+  const noPaymentsLeft = categories.every(categoryTotal => categoryTotal.total === 0);
+  console.log("noPaymentsLeft " + noPaymentsLeft);
+  if (noPaymentsLeft) {
+    localStorage.clear();
+  }
+  
 };

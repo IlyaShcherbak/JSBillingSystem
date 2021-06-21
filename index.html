@@ -35,6 +35,11 @@
         Обмен валют
       </button>
 
+      <button id="saved-payments" class="sidebar-item">
+        <img class="icon" src="assets/online-payment.svg" alt="Оплата">
+        Оплата
+      </button>
+
     </div>
 
     <div id="cold-water-content" class="content">
@@ -67,8 +72,8 @@
       <p class="d-none errors" id="error2">Текущие показания должны быть больше предыдущих</p>
       <hr>
 
-      <div class="payment">
-        <h3>К оплате</h3>
+      <div id="payment-bills" class="payment">
+        <p>К оплате</p>
         <div id="payment-fields">
         </div>
         <hr>
@@ -77,9 +82,9 @@
 
       <hr>
 
-      <div class="clear-wrapper">
+      <div class="button-wrapper">
         <button id="clear-button" class="footer-button clear">Очистить</button>
-        <button id="save-button" class="footer-button save" disabled>Сохранить</button>
+        <button id="save-button" class="footer-button blue-btn" disabled>Сохранить</button>
       </div>
 
     </div>
@@ -102,6 +107,43 @@
     <div id="exchange-content" class="content d-none" >
       <h2 class="title">Обмен валют</h2>
       <p>Обмен валюты на нужную вам</p>
+    </div>
+
+    <div id="saved-payments-content" class="content d-none" >
+      <h2 class="title">Сохраненные платежи</h2>
+      <div class="selected-payments">
+
+        <div class="selected-payments-row">
+          <input class="selected-payments-checkbox" type="checkbox" name="current-meter-value" id="taxes-checkbox" disabled>
+          <label class="description-checkbox" for="taxes-checkbox">Налоги</label>
+        </div>
+
+        <div class="selected-payments-row">
+          <input class="selected-payments-checkbox" type="checkbox" name="current-meter-value" id="cold-water-checkbox" disabled>
+          <label class="description-checkbox" for="cold-water-checkbox">Холодная вода</label>
+        </div>
+
+        <div class="selected-payments-row">
+          <input class="selected-payments-checkbox" type="checkbox" name="current-meter-value" id="internet-checkbox" disabled>
+          <label class="description-checkbox" for="internet-checkbox">Интернет</label>
+        </div>
+
+        <div class="selected-payments-row">
+          <input class="selected-payments-checkbox" type="checkbox" name="current-meter-value" id="security-checkbox" disabled>
+          <label class="description-checkbox" for="security-checkbox">Охрана</label>
+        </div>
+
+        <div class="selected-payments-row">
+          <input class="selected-payments-checkbox" type="checkbox" name="current-meter-value" id="exchange-checkbox" disabled>
+          <label class="description-checkbox" for="exchange-checkbox">Обмен валют</label>
+        </div>
+
+        <div class="button-wrapper">
+          <button id="pay-button" class="footer-button blue-btn"  >Оплатить</button>
+        </div>
+        <hr>
+      </div>
+      <div id="payment-state"></div>
     </div>
 
   </div>

@@ -16,6 +16,12 @@ hr {
   display : none;
 }
 
+.green-text {
+  color: #11ce11;
+}
+.red-text {
+  color: red;
+}
 
 
 #error-message {
@@ -116,7 +122,7 @@ hr {
   width : 180px;
 }
 
-.clear-wrapper {
+.button-wrapper {
   display         : flex;
   justify-content : flex-end;
   margin          : 20px 0;
@@ -140,16 +146,41 @@ hr {
   color            : #26d1dc;
 }
 
-.save {
+.blue-btn {
   background-color : #26d1dc;
   color            : white;
   margin-left: 20px;
+  outline: none;
 }
 
-.save:disabled {
+.blue-btn:disabled {
   background-color: grey;
   border: none;
 }
-.save:disabled:hover {
+.blue-btn:disabled:hover {
   font-size: 13px;
+}
+
+.selected-payments {
+  margin-left: 20px;
+}
+
+.selected-payments-row {
+  display     : flex;
+  align-items : center;
+  margin-bottom: 15px;
+}
+
+.selected-payments-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-right : 10px;
+}
+
+.description-checkbox {
+  font-size: 18px
+}
+
+#payment-state{
+  margin-right : 10px;
 }
