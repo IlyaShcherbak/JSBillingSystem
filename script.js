@@ -48,13 +48,9 @@ let savedTotal = 0;
 
 reloadUpdate();
 
-console.log(localStorage);
-
-
 function reloadUpdate() {
   if (localStorage.getItem("payments")) {
     payments = JSON.parse(localStorage.getItem("payments"));
-    console.log("payments " + localStorage.getItem("payments"));
     document.getElementById("cold-water-checkbox").disabled = false;
   }
   
@@ -68,12 +64,10 @@ function reloadUpdate() {
   
   if (localStorage.getItem("categories")) {
     categories = JSON.parse(localStorage.getItem("categories"));
-    console.log("categories " + categories);
   }
   
   if (localStorage.getItem("balance")) {
     balance = +localStorage.getItem("balance");
-    console.log("balance " + balance);
   }
   
   if (localStorage.getItem("statusMessages") && localStorage.hasOwnProperty("isError")) {
@@ -87,9 +81,6 @@ function reloadUpdate() {
   
   savedTotal = +localStorage.getItem("paymentTotal");
   document.getElementById("meter-payment-total").innerText = savedTotal;
-  console.log(`saved total `+ savedTotal);
-  console.log("is error " + localStorage.getItem("isError"), typeof(localStorage.getItem("isError")));
-
 }
 
 
@@ -243,15 +234,11 @@ function showPayment() {
     return accumulator + currentValue.amount;
   }, initialValue);
   
-  categories.find(category => category.id === currentPayment.id).total = totalPayment + savedTotal;//!!!!!!!!!!!!!!!!!!
-  console.log("categories after save btn"+ categories);
+  categories.find(category => category.id === currentPayment.id).total = totalPayment + savedTotal;
   localStorage.setItem("categories", JSON.stringify(categories));
-  
   localStorage.setItem("paymentTotal", JSON.stringify(totalPayment));
   
-  
   const totalField = document.getElementById("meter-payment-total");
-  console.log(totalPayment, savedTotal);
   totalField.innerText = totalPayment ;
 }
 
@@ -265,7 +252,6 @@ clearButton.onclick = function() {
   
   document.getElementById("meter-payment-total").innerText = "0";
   localStorage.clear();
-  console.log(localStorage);
 };
 
 
@@ -279,7 +265,6 @@ function payCategory(category) {
   
   if (isCategorySelected && balance>= category.total) {
     balance = balance - category.total;
-    console.log(balance, category.total);
     localStorage.setItem("balance", JSON.stringify(balance));
   
     messages.paymentMessage = `${category.id}: оплачено`;
@@ -329,11 +314,8 @@ payButton.onclick = function() {
   paymentStatesContent.innerText = paymentStatesMessage;
   paymentStates.appendChild(paymentStatesContent);
   
-  
   const noPaymentsLeft = categories.every(categoryTotal => categoryTotal.total === 0);
-  console.log("noPaymentsLeft " + noPaymentsLeft);
   if (noPaymentsLeft) {
     localStorage.clear();
   }
-  
 };
