@@ -1,3 +1,22 @@
+/*
+1. Есть баг с сохранением показаний: в некоторых случаях кнопка сохранить остается disabled
+после ввода показаний и выбора счетчика. Кнопка становится активной после клика по селекту счетчика
+
+2. Не работает оплата, ошибка: Холодная вода: ошибка транзакции. Может быть это из-за отсутствия стартовой точки проекта.
+Если так то все норм
+
+3. Есть замечания по структуре кода и переиспользованием. Написал комменты
+Эта проблема отчасти от отсутствия сборщика
+Также подумай над организацией в модули. Тут нет сборщика на проекте,
+и все в одном файле, по-этому в таких случаях можно сделать подобный проект на классах (ООП подход). Либо включить сборщик
+и разбить по файлам, а там уже сделать простые js модули (экспорт вещей только которые используются вне модуля, остальные
+не экспортить, только использовать внутри. В общем подобие публичного и приватного интерфейсов).
+Можно и в случае разбития по  файлам также использовать ООП подход
+
+В остальном все норм
+ */
+
+
 let currentPayment = {
   id: "cold-water",
   meterId: null,
@@ -49,36 +68,49 @@ let savedTotal = 0;
 reloadUpdate();
 
 function reloadUpdate() {
+  /*
+    Здесь много повторяющегося кода. Резонее создать одну переменную в localStorage, такие вещи делаются лаконичней напр.
+    paymentsData и вначале блока сделать что-то типа.
+    const {
+      payments,
+      paymentFields,
+      paymentTotal,
+      categories,
+      balance,
+      statusMessage,
+      isError
+    } = JSON.parse(localStorage.getItem('paymentsData'));
+   */
   if (localStorage.getItem("payments")) {
     payments = JSON.parse(localStorage.getItem("payments"));
     document.getElementById("cold-water-checkbox").disabled = false;
   }
-  
+
   if (!document.getElementById("payment-fields").innerText && localStorage.getItem("paymentFields")) {
     document.getElementById("payment-fields").innerText = JSON.parse(localStorage.getItem("paymentFields"));
   }
-  
+
   if (document.getElementById("meter-payment-total").innerText === "0" && localStorage.getItem("paymentTotal")) {
     document.getElementById("meter-payment-total").innerText = JSON.parse(localStorage.getItem("paymentTotal"));
   }
-  
+
   if (localStorage.getItem("categories")) {
     categories = JSON.parse(localStorage.getItem("categories"));
   }
-  
+
   if (localStorage.getItem("balance")) {
     balance = +localStorage.getItem("balance");
   }
-  
+
   if (localStorage.getItem("statusMessages") && localStorage.hasOwnProperty("isError")) {
     document.getElementById("payment-state").innerText = localStorage.getItem("statusMessages");
     document.getElementById("payment-state").classList.add("green-text");
-    
+
     if (localStorage.getItem("isError") === "true"){
       document.getElementById("payment-state").classList.add("red-text"); //?
     }
   }
-  
+
   savedTotal = +localStorage.getItem("paymentTotal");
   document.getElementById("meter-payment-total").innerText = savedTotal;
 }
@@ -92,15 +124,17 @@ const errorMessages = {
 let errorMessage = "";
 
 const sidebar = document.getElementById("sidebar");
+
+// Лучше присваивать обработчики через element.addEventListener()
 sidebar.onclick = function (event) {
   if (event.target.tagName === "BUTTON") {
     const clickedElementID = event.target.id;
-    
+
     if(clickedElementID !== currentPayment.id){
       setSelectedSidebarItem(clickedElementID);
-  
+
       showContentById(clickedElementID);
-      
+
       currentPayment.id = clickedElementID;
     }
   }
@@ -118,13 +152,13 @@ function showContentById(id) {
   //   currentContent = document.getElementById("no-content");
   // }
   currentContent.classList.add("d-none");
-  
+
   let clickedElementContent = document.getElementById(id + "-content");
   // if (clickedElementContent === null) {
   //   clickedElementContent = document.getElementById("no-content");
   // }
   clickedElementContent.classList.remove("d-none");
-  
+
   // const clickedElementTitle = document.getElementById(id).innerText;
   // clickedElementContent.getElementsByClassName("title")[0].innerText = clickedElementTitle;
 }
@@ -132,18 +166,18 @@ function showContentById(id) {
 const meter = document.getElementById("utility-meter");
 meter.onclick = function () {
   const selectedOptionText = meter.options[meter.selectedIndex].text;
-  
+
   if(currentPayment.meterId !== selectedOptionText) {
     currentPayment.meterId = selectedOptionText;
     checkButtonState();
   }
 }
 
-
+// Тут повторение кода(блоки с previousMeterValue, currentMeterValue), можно сократить, но в принципе пойдет
 const previousMeterValue = document.getElementById("previous-meter-value");
 previousMeterValue.onchange = function (event) {
   const value = event.target.value;
-  
+
   currentPayment.previous = +value;
   validate();
 };
@@ -152,7 +186,7 @@ previousMeterValue.onchange = function (event) {
 const currentMeterValue = document.getElementById("current-meter-value");
 currentMeterValue.onchange = function (event) {
   const value = event.target.value;
-  
+
   currentPayment.current = +value;
   validate();
 };
@@ -160,7 +194,7 @@ currentMeterValue.onchange = function (event) {
 
 function validate() {
   errorMessage = "";
-  
+
   if (currentPayment.previous !== null && currentPayment.previous < 1) {
     previousMeterValue.classList.add("invalid");
     errorMessage = errorMessages.invalidZero;
@@ -177,7 +211,7 @@ function validate() {
     previousMeterValue.classList.remove("invalid");
     currentMeterValue.classList.remove("invalid");
   }
-  
+
   document.getElementById("error-message").innerText = errorMessage;
   checkButtonState();
 }
@@ -195,7 +229,7 @@ saveButton.onclick = function () {
   localStorage.removeItem("payments");
   payments.push(currentPayment);
   countCosts();
-  
+
   showPayment();
   currentPayment = {
     id: "cold-water",
@@ -203,17 +237,17 @@ saveButton.onclick = function () {
     previous: null,
     current: null,
   };
-  
+
   localStorage.setItem("payments", JSON.stringify(payments));
-  
+
   const paymentFields = document.getElementById("payment-fields").innerText;
   localStorage.setItem("paymentFields", JSON.stringify(paymentFields))
-  
+
   previousMeterValue.value ="";
   currentMeterValue.value ="";
   meter.selectedIndex = 0;
   document.getElementById("save-button").disabled = true;
-  
+
   document.getElementById("cold-water-checkbox").disabled = false;
 };
 
@@ -225,19 +259,19 @@ function countCosts() {
 function showPayment() {
   const text = document.createElement("p");
   text.innerText = `${currentPayment.meterId} $ ${currentPayment.amount}`;
-  
+
   const paymentFields = document.getElementById("payment-fields");
   paymentFields.appendChild(text);
-  
+
   const initialValue = 0;
   const totalPayment = payments.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.amount;
   }, initialValue);
-  
+
   categories.find(category => category.id === currentPayment.id).total = totalPayment + savedTotal;
   localStorage.setItem("categories", JSON.stringify(categories));
   localStorage.setItem("paymentTotal", JSON.stringify(totalPayment));
-  
+
   const totalField = document.getElementById("meter-payment-total");
   totalField.innerText = totalPayment ;
 }
@@ -246,10 +280,10 @@ function showPayment() {
 const clearButton = document.getElementById("clear-button");
 clearButton.onclick = function() {
   payments = [];
-  
+
   const paymentFields = document.getElementById("payment-fields");
   paymentFields.innerText = "";
-  
+
   document.getElementById("meter-payment-total").innerText = "0";
   localStorage.clear();
 };
@@ -262,26 +296,26 @@ function payCategory(category) {
     statusMessage : "",
     isError: false,
   }
-  
+
   if (isCategorySelected && balance>= category.total) {
     balance = balance - category.total;
     localStorage.setItem("balance", JSON.stringify(balance));
-  
+
     messages.paymentMessage = `${category.id}: оплачено`;
     messages.statusMessage = `${category.label}: успешно оплачено`;
     messages.isError = false;
-    
+
     category.total = 0;
-    
+
     localStorage.setItem("isError", JSON.stringify(messages.isError));
     return messages;
   }
   if (isCategorySelected && balance < category.total) {
     messages.paymentMessage = `${category.id}: не оплачено`;
     messages.statusMessage  = `${category.label}: ошибка транзакции`;
-    
+
     messages.isError = true;
-    
+
     localStorage.setItem("isError", JSON.stringify(messages.isError));
     return messages;
   }
@@ -291,29 +325,29 @@ const payButton = document.getElementById("pay-button");
 payButton.onclick = function() {
   let payMessage = "";
   let paymentStatesMessage = "";
-  
+
   const paymentStates = document.getElementById("payment-state");
   const paymentStatesContent = document.createElement("p");
   paymentStatesContent.classList.add("green-text");
-  
+
   categories.forEach(category => {
     const selectedCategory = payCategory(category);
     if (selectedCategory) {
       payMessage = payMessage + selectedCategory.paymentMessage + "\n";
       paymentStatesMessage = paymentStatesMessage + selectedCategory.statusMessage + "\n"
-      
+
       if (selectedCategory.isError) {
         paymentStatesContent.classList.add("red-text");
       }
     }
   });
   console.log(payMessage);
-  
+
   localStorage.setItem("statusMessages", paymentStatesMessage);
-  
+
   paymentStatesContent.innerText = paymentStatesMessage;
   paymentStates.appendChild(paymentStatesContent);
-  
+
   const noPaymentsLeft = categories.every(categoryTotal => categoryTotal.total === 0);
   if (noPaymentsLeft) {
     localStorage.clear();
